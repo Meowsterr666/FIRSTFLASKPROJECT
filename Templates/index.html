@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>SQL DATABASE</title>
+</head>
+<body>
+<style>
+    .my-button {
+        background-color: grey;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        margin: 10px;
+    }
+
+    .postform {
+        margin: 10px;
+    }
+
+    /* Dropdown Button */
+    .dropbtn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    }
+
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+    position: relative;
+    display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    overflow: scroll;
+    aspect-ratio: 2/6;
+    }
+
+    /* Links inside the dropdown */
+    .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    }
+
+    /* Change color of dropdown links on hover */
+    .dropdown-content a:hover {background-color: #ddd;}
+
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {display: block;}
+
+    /* Change the background color of the dropdown button when the dropdown content is shown */
+    .dropdown:hover .dropbtn {background-color: #3e8e41;}
+</style>
+<a href="{{ url_for('button_clicked') }}">
+    <button class="my-button" type="button">Return a JSON of the database</button>
+</a>
+
+<div class="postform">
+    <form action="{{ url_for('read_form')}}" method="POST">
+        <label for="fgame">Game</label>
+        <input type="text" id="fgame" name="userGame"></input>
+    
+        <label for="reward">Reward</label>
+        <input type="text" id="reward" name="reward" placeholder="reward title"></input>
+
+        <label for="status">Status</label>
+        <select id="status" name="status">
+            <option value="Failed">Failed</option>
+            <option value="Completed">Completed</option>
+            <option value="In progress">In Progress</option>
+        </select>
+        <input type="submit" value="Send that shit to da DB">
+    </form>
+</div>
+
+<div class="postform">
+    <form action="{{ url_for('delete_row')}}" method="POST">
+        <label for="dID">ID to delete</label>
+        <select name="rowID">
+        <div class="dropdown">
+            {% for game in games %}
+            <option>{{ game[0] }}</option>
+            {% endfor %}
+        </div>
+        </select>
+        <input type="submit" value="Delete">
+    </form>
+</div>
+<div>
+    <table border = 1>
+        <thead>
+            <td>Id</td>
+            <td>Game</td>
+            <td>Reward</td>
+            <td>Status</td>
+        </thead>
+        {% for game in games %}
+            <tr>
+                <td>{{ game[0] }}</td>
+                <td>{{ game[1] }}</td>
+                <td>{{ game[2] }}</td>
+                <td>{{ game[3] }}</td>
+                <td>
+                    <form action="{{ url_for('delete_button') }}" method="POST">
+                        <a href="read_form">
+                            <button name="buttonID" value="{{ game[0] }}">delete</button>
+                        </a>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>  
+</div>
+<div>
+    <h1>Game rows in games.db</h1>
+    <ul>
+    {% for game in games %}
+        <li>{{ game }}</li>
+    {% endfor %}    
+    </ul>
+</div>
+</body>
+</html>
